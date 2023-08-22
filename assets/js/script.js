@@ -33,9 +33,16 @@ function runGame(gameType) {
     document.getElementById("answer-box").value = '';
     document.getElementById("answer-box").focus();
 
-    // Creates two random numbers between 1 and 25
-    let num1 = Math.floor(Math.random() * 25) + 1;
-    let num2 = Math.floor(Math.random() * 25) + 1;
+    // Creates two random numbers between 1 and 25. Makes sure that num1>num2 and division result is integer.
+    let num1, num2;
+    let notRightNumbers = true;
+    while (notRightNumbers) {
+        num1 = Math.floor(Math.random() * 25) + 1;
+        num2 = Math.floor(Math.random() * 25) + 1;
+        if ((num2 !== 0) && (num1 % num2 === 0)) {
+            notRightNumbers = false;
+        }
+    }
 
     if (gameType === "addition") {
         displayAdditionQuestion(num1, num2);
@@ -44,12 +51,10 @@ function runGame(gameType) {
     } else if (gameType === "subtract") {
         displaySubtractQuestion(num1, num2);
     } else {
-        alert(`Unknown game type: ${gameType}`);
-        throw `Unknown game type: ${gameType}. Aborting!`;
+        displayDivisionQuestion(num1, num2);
     }
 
 }
-
 /**
  * Checks the answer agaist the first element in
  * the returned calculateCorrectAnswer array
@@ -89,8 +94,7 @@ function calculateCorrectAnswer() {
     } else if (operator === "-") {
         return [operand1 - operand2, "subtract"];
     } else {
-        alert(`Unimplemented operator ${operator}`);
-        throw `Unimplemented operator ${operator}. Aborting!`;
+        return [operand1 / operand2, "division"];
     }
 
 }
@@ -135,4 +139,11 @@ function displayMultiplyQuestion(operand1, operand2) {
     document.getElementById('operand2').textContent = operand2;
     document.getElementById('operator').textContent = "x";
 
+}
+
+function displayDivisionQuestion(operand1, operand2) {
+
+    document.getElementById('operand1').textContent = operand1;
+    document.getElementById('operand2').textContent = operand2;
+    document.getElementById('operator').textContent = "/";
 }
